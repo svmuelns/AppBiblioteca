@@ -190,7 +190,6 @@ public class Autor {
                 } else if (deleteInput == 0) {
                     System.out.println("Saliendo...");
                     break;
-
                 }
             }
         } while (opcionNoValida);
