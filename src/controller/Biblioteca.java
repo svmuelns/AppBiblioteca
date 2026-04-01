@@ -1,8 +1,8 @@
 package controller;
 
-import model.Libro;
 import model.Autor;
 import model.Catalogo;
+import model.Libro;
 import util.Ayudantes;
 
 import java.time.LocalDateTime;
@@ -10,36 +10,32 @@ import java.util.*;
 
 public class Biblioteca{
     private int registroID;
-    private LocalDateTime fechaAgregada;
-    private LocalDateTime fechaPrestado;
+    private static final String nombreBiblioteca = "ALEJANDRÍA";
+    private static final String director = "Samuel Nuñez";
 
     private static final Map<String, Libro> BibliotecaDB = new HashMap<>();
 
     // ========== SETTERS Y GETTERS =============
-    public static Map<String, Libro> getBibliotecaDB() {
-        return BibliotecaDB;
-    }
     // AGREGAR LIBROS
-    public static void agregarLibro(Libro libro) {
+    public static void AgregarLibro(Libro libro) {
         BibliotecaDB.put(libro.getIsbn(), libro);
     }
-    public static Libro getLibro(String key) {
-        return BibliotecaDB.get(key);
+    public static String getNombreBiblioteca() {
+        return nombreBiblioteca;
     }
-    public static boolean contieneLibro(String key) {
-        return BibliotecaDB.containsKey(key);
-    }
-    public static int getSize() {
-        return BibliotecaDB.size();
+    public static String getDirector(){
+        return director;
     }
 
     // ================ MENU'S ==================
     public static void MostrarMenuBiblioteca(){
         System.out.println("\n *+-.-+*+-. MENÚ: LIBROS .-+*+-.-+*\n");
         System.out.println("     1. Ver todos los libros");
-        System.out.println("     2. Filtrar por autor");
-        System.out.println("     3. Filtrar por categoría");
-        System.out.println("     4. Filtrar por ISBN");
+        System.out.println("     2. Agregar libros");
+        System.out.println("     3. Eliminar libros");
+        System.out.println("     4. Filtrar por autor");
+        System.out.println("     5. Filtrar por categoría");
+        System.out.println("     6. Filtrar por ISBN");
         System.out.println("     0. Salir");
     }
 
@@ -57,7 +53,7 @@ public class Biblioteca{
             // ELEGIR OPCION
             String aviso = "\nElige una opción: ";
 
-            int choiceBiblio = Ayudantes.AyudanteScannerInt(sc, aviso, 0, 4);
+            int choiceBiblio = Ayudantes.AyudanteScannerInt(sc, aviso, 0, 6);
 
             switch (choiceBiblio) {
                 case 1:
@@ -65,17 +61,34 @@ public class Biblioteca{
                     MostrarLibrosBiblioteca();
                     break;
                 case 2:
-                    // 2. FILTRAR POR AUTOR
+                    // 2. AGREGAR LIBROS
+                    System.out.println("\n *+-.-+*+-. AGREGAR LIBRO .-+*+-.-+*\n");
+
+                    // CREAR LIBRO
+                    Libro libro =  new Libro().CrearLibro(sc);
+
+                    // AGREGAR A LA BIBLIOTECA
+                    AgregarLibro(libro);
+                    break;
+                case 3:
+                    // 3. ELIMINAR LIBROS
+                    System.out.println("\n *+-.-+*+-. ELIMINAR LIBRO .-+*+-.-+*\n");
+
+                    // ELIMINAR LIBRO DE BIBLIOTECA
+                    EliminarLibro(sc);
+
+                    break;
+                case 4:
+                    // 4. FILTRAR POR AUTOR
                     index = 0;
                     FiltrarPorAutor(sc, index);
                     break;
-                case 3:
-                    // 3. FILTRAR POR CATEGORIA
-                    index = 0;
-                    FiltrarPorCategoria(sc, index);
+                case 5:
+                    // 5. FILTRAR POR CATEGORIA
+                    FiltrarPorCategoria(sc);
                     break;
-                case 4:
-                    // 4. FILTRAR POR ISBN
+                case 6:
+                    // 6. FILTRAR POR ISBN
                     index = 0;
                     FiltrarPorISBN(sc, index);
                     break;
@@ -98,7 +111,6 @@ public class Biblioteca{
     // 2. FILTRAR POR AUTOR
     public static void FiltrarPorAutor(Scanner sc, int index) {
         boolean opcionNoValida;
-        boolean libroEncontrado = false;
         int choiceAutor;
 
         if (!Autor.AutoresDB().isEmpty()) {
@@ -124,12 +136,10 @@ public class Biblioteca{
                         if (librito.getAutor().getAutorID() == autorSeleccionado.getAutorID()) {
                             Libro.MostrarLibro(librito, index);
                             index++;
-                            libroEncontrado = true;
                         }
                     }
-
-                    if (!libroEncontrado) {
-                        System.out.println("\n[ No se encontraron libros para este autor... ]");
+                    if (index == 0) {      // Si no hay libros en la categoría, el index no aumenta
+                        System.out.println("\n[ El autor no tiene libros por el momento... ]");
                     }
 
                 }
@@ -141,7 +151,8 @@ public class Biblioteca{
     }
 
     // 3. FILTRAR POR CATEGORIA
-    public static void FiltrarPorCategoria(Scanner sc, int index) {
+    public static void FiltrarPorCategoria(Scanner sc) {
+        int index = 0;
         boolean opcionNoValida;
         int choiceCategoria;
 
@@ -157,21 +168,26 @@ public class Biblioteca{
 
                 if (choiceCategoria < 1 || choiceCategoria > Catalogo.CatalogoDB().size()){
                     opcionNoValida = true;
-                }
+                } else {
 
-                // RESTAMOS 1 A LA CATEGORIA SELECCIONADA
-                Catalogo categoriaSeleccionada = Catalogo.CatalogoDB().get(choiceCategoria - 1);
+                    Catalogo categoriaSeleccionada = Catalogo.CatalogoDB().get(choiceCategoria - 1); // Restamos 1 a la categoría seleccionada
 
-                System.out.format("\n.-+*+-. FILTRANDO POR CATEGORÍA: %s .-+*+-.\n", categoriaSeleccionada.getCategoriaName());
+                    System.out.format("\n.-+*+-. FILTRANDO POR CATEGORÍA: %s .-+*+-.\n", categoriaSeleccionada.getCategoriaNombre());
 
-                for (Libro librito : BibliotecaDB.values()){
-                    if (librito.getCategoria().getCategoriaID() == categoriaSeleccionada.getCategoriaID()) {
-                        Libro.MostrarLibro(librito, index);
-                        index++;
+                    for (Libro librito : BibliotecaDB.values()) {
+                        if (librito.getCategoria().getCategoriaID() == categoriaSeleccionada.getCategoriaID()) {
+                            Libro.MostrarLibro(librito, index);
+                            index++;
+                        }
+                    }
+                    if (index == 0) {      // Si no hay libros en la categoría, el index no aumenta
+                        System.out.println("\n[ No hay libros en la categoría seleccionada por el momento... ]");
                     }
                 }
 
             } while (opcionNoValida);
+        } else{
+            System.out.println("[ Por el momento no hay categorías... ]");
         }
     }
 
@@ -182,8 +198,9 @@ public class Biblioteca{
 
         if (!BibliotecaDB.isEmpty()){
             do {
+                System.out.println("\n.-+*+-. FILTRANDO POR ISBN .-+*+-.\n");
 
-                System.out.println("\n     0. Salir");
+                System.out.println("     0. Salir");
 
                 String aviso = "\nEscribe el ISBN: ";
                 opcionNoValida = false;
@@ -195,6 +212,7 @@ public class Biblioteca{
                 } else if (inputISBN.equals("0")) {
                     break;
                 } else {
+
                     for (Libro librito : BibliotecaDB.values()){
                         if (librito.getIsbn().equals(inputISBN)){
                             Libro.MostrarLibro(librito, index);
@@ -222,7 +240,7 @@ public class Biblioteca{
             opcionNoValida = false;
 
             if (librito != null){
-                System.out.println("     1. Eliminar libro: " + librito.getTitulo());
+                System.out.println("\n     1. Eliminar libro: " + librito.getTitulo());
                 System.out.println("     0. Salir");
 
                 String aviso = "\nEstás seguro que deseas eliminar el libro?: ";
@@ -232,9 +250,8 @@ public class Biblioteca{
                     case 1:
                         BibliotecaDB.remove(librito.getIsbn());
                         System.out.println("\n[ El libro ha sido eliminado con éxito... ]");
-
+                        break;
                     case 0:
-                        System.out.println("Saliendo...");
                         break;
 
                     default:

@@ -64,6 +64,7 @@ public class Autor {
             for (Autor autorcito : AutoresDB()) {
                 System.out.println("     " + autorcito.getAutorID() + ". " + autorcito.getNombre());
             }
+            System.out.println();
         } else {
             System.out.println("[ No hay autores... ]");
         }
@@ -71,10 +72,10 @@ public class Autor {
 
     // MENU ELEGIR OPCION AUTORES
     public static void OpcionesAutores(Scanner sc) {
-        boolean opcionNoValida;
+        boolean salir;
 
         do {
-            opcionNoValida = false;
+            salir = false;
 
             // MOSTRAR MENU DE OPCIONES BIBLIOTECA
             MostrarMenuAutores();
@@ -98,11 +99,9 @@ public class Autor {
                     Autor.EliminarAutor(sc);
                     break;
                 case 0:
-                    break;
-                default:
-                    opcionNoValida = true;
+                    salir = true;
             }
-        } while (opcionNoValida);
+        } while (!salir);
     }
 
     // 2. AGREGAR AUTOR
