@@ -1,11 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Scanner;
 import java.util.Random;
+
 import util.Ayudantes;
 
-public class Libro extends Elemento {
+public class Libro extends Elemento implements Serializable {
     private Soporte soporte;
+    private static final long serialVersionUID = 1L; // Control de versiones
 
     // ============== CONSTRUCTORES ==============
 
@@ -19,6 +22,7 @@ public class Libro extends Elemento {
     // ============= GETTER Y SETTER =============
     public Soporte getSoporte() { return soporte; }
     public void setSoporte(Soporte soporte) { this.soporte = soporte; }
+
 
     // ================== MENU'S =================
     public static void MostrarMenuSoporte() {
@@ -163,7 +167,7 @@ public class Libro extends Elemento {
         System.out.println("     ISBN: " + libro.getIsbn());
         System.out.println("     Titulo: " + libro.getTitulo());
         System.out.println("     Autor: " + libro.getAutor().getNombre());
-        System.out.println("     Categoria: " + libro.getCategoria().getCategoriaName());
+        System.out.println("     Categoria: " + libro.getCategoria().getCategoriaNombre());
         System.out.println("     Nº de páginas: " + libro.getNroPaginas());
         System.out.println("     Soporte: " + libro.getSoporte());
     }

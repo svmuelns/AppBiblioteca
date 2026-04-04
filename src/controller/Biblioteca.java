@@ -5,8 +5,8 @@ import model.Catalogo;
 import model.Libro;
 import util.Ayudantes;
 
-import java.time.LocalDateTime;
 import java.util.*;
+import java.io.*;
 
 public class Biblioteca{
     private int registroID;
@@ -36,6 +36,7 @@ public class Biblioteca{
         System.out.println("     4. Filtrar por autor");
         System.out.println("     5. Filtrar por categoría");
         System.out.println("     6. Filtrar por ISBN");
+        System.out.println("     7. Exportar biblioteca");
         System.out.println("     0. Salir");
     }
 
@@ -53,7 +54,7 @@ public class Biblioteca{
             // ELEGIR OPCION
             String aviso = "\nElige una opción: ";
 
-            int choiceBiblio = Ayudantes.AyudanteScannerInt(sc, aviso, 0, 6);
+            int choiceBiblio = Ayudantes.AyudanteScannerInt(sc, aviso, 0, 7);
 
             switch (choiceBiblio) {
                 case 1:
@@ -92,6 +93,9 @@ public class Biblioteca{
                     index = 0;
                     FiltrarPorISBN(sc, index);
                     break;
+                case 7:
+                    // 7. EXPORTAR BIBLIOTECA
+                    ExportarBiblioteca(BibliotecaDB);
                 case 0:
                     salir = true;
             }
@@ -101,11 +105,15 @@ public class Biblioteca{
     // 1. VER TODOS LOS LIBROS
     public static void MostrarLibrosBiblioteca() {
         int index = 0;
-        for (Libro librito : BibliotecaDB.values()) {
-            Libro.MostrarLibro(librito, index);
-            index++;
+        if (!BibliotecaDB.isEmpty()) {
+            for (Libro librito : BibliotecaDB.values()) {
+                Libro.MostrarLibro(librito, index);
+                index++;
+            }
+            System.out.println();
+        } else {
+            System.out.println("[ La biblioteca está vacía... ]");
         }
-        System.out.println();
     }
 
     // 2. FILTRAR POR AUTOR
@@ -259,6 +267,17 @@ public class Biblioteca{
                 }
             }
         } while (opcionNoValida);
+    }
+
+    // 6. EXPORTAR LIBROS
+    public static void ExportarBiblioteca(Map<String, Libro> BibliotecaDB) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("libros.obj"))) {
+            oos.writeObject(BibliotecaDB);
+            System.out.println("\n[ Libros exportados correctamente a libros.obj ]");
+        } catch (IOException e) {
+            System.err.println("\n[ Error al exportar los libros: " + e.getMessage() + "]");
+            e.printStackTrace();
+        }
     }
 }
 
