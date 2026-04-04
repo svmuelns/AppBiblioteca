@@ -24,7 +24,6 @@ public class Autor {
     public int getAutorID() {
         return autorID;
     }
-
     public String getNombre() {
         return nombre;
     }
@@ -117,7 +116,7 @@ public class Autor {
 
             nombreAutor = Ayudantes.AyudanteScannerString(sc, aviso);
 
-            if (nombreAutor == null || nombreAutor.isEmpty() || !nombreAutor.matches("^[a-zA-Z0-9\\s\\-\\.,!?;:()]+$")) {
+            if (nombreAutor == null || nombreAutor.isEmpty() || !nombreAutor.matches("^[a-zA-Z0-9\\s\\-.,!?;:()]+$")) {
                 opcionNoValida = true;
             } else {
                 // AGREGAMOS EL AUTOR A LA BASE DE DATOS DE AUTORES
@@ -186,7 +185,7 @@ public class Autor {
                     AutoresDB().remove(autorcito.getAutorID() - 1);
                     System.out.println("\n[ El autor ha sido eliminado con éxito... ]");
 
-                } else if (deleteInput == 0) {
+                } else {
                     System.out.println("Saliendo...");
                     break;
                 }

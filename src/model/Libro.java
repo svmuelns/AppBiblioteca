@@ -1,29 +1,31 @@
 package model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Scanner;
 import java.util.Random;
-
 import util.Ayudantes;
 
 public class Libro extends Elemento implements Serializable {
     private Soporte soporte;
-    private static final long serialVersionUID = 1L; // Control de versiones
+
+    @Serial
+    private static final long serialVersionUID = 1L; // Control de versiones para exportaciones
 
     // ============== CONSTRUCTORES ==============
-
     public Libro() {}
 
     public Libro(String isbn, String titulo, Autor autor, Catalogo categoria, Soporte soporte, int nroPaginas) {
         super(isbn, titulo, autor, categoria, nroPaginas);
         this.soporte = soporte;
     }
-
     // ============= GETTER Y SETTER =============
-    public Soporte getSoporte() { return soporte; }
-    public void setSoporte(Soporte soporte) { this.soporte = soporte; }
-
-
+    public Soporte getSoporte() {
+        return soporte;
+    }
+    public void setSoporte(Soporte soporte) {
+        this.soporte = soporte;
+    }
     // ================== MENU'S =================
     public static void MostrarMenuSoporte() {
         System.out.println("\n *+-.-+*+-. SOPORTE .-+*+-.-+*\n");
@@ -50,7 +52,7 @@ public class Libro extends Elemento implements Serializable {
 
             titulo = Ayudantes.AyudanteScannerString(sc, aviso);
 
-            if (titulo == null || titulo.isEmpty() || !titulo.matches("^[a-zA-Z0-9\\s\\-\\.,!?;:()]+$")) {
+            if (titulo == null || titulo.isEmpty() || !titulo.matches("^[a-zA-Z0-9\\s\\-.,!?;:()]+$")) {
                 opcionNoValida = true;
             }
         } while (opcionNoValida);
@@ -68,7 +70,7 @@ public class Libro extends Elemento implements Serializable {
 
             nombreAutor = Ayudantes.AyudanteScannerString(sc, aviso);
 
-            if (nombreAutor == null || nombreAutor.isEmpty() || !nombreAutor.matches("^[a-zA-Z0-9\\s\\-\\.,!?;:()]+$")) {
+            if (nombreAutor == null || nombreAutor.isEmpty() || !nombreAutor.matches("^[a-zA-Z0-9\\s\\-.,!?;:()]+$")) {
                 opcionNoValida = true;
             } else {
                 // AGREGAMOS EL AUTOR A LA BASE DE DATOS DE AUTORES
@@ -93,16 +95,13 @@ public class Libro extends Elemento implements Serializable {
             // ELEGIR OPCION
             String aviso = "\nElige un género: ";
 
-            int bookChoice = Ayudantes.AyudanteScannerInt(sc, aviso, 1, Catalogo.CatalogoDB().size());
+            int categoriaChoice = Ayudantes.AyudanteScannerInt(sc, aviso, 1, Catalogo.CatalogoDB().size());
 
-            switch (bookChoice) {
-                case 1 -> categoria = Catalogo.getCategoriaById(1);
-                case 2 -> categoria = Catalogo.getCategoriaById(2);
-                case 3 -> categoria = Catalogo.getCategoriaById(3);
-                case 4 -> categoria = Catalogo.getCategoriaById(4);
-                default -> opcionNoValida = true;
+            if (categoriaChoice < 1 ||categoriaChoice > Catalogo.CatalogoDB().size()) {
+                opcionNoValida = true;
+            } else {
+                categoria = Catalogo.getCategoriaById(categoriaChoice);
             }
-
 
         } while (opcionNoValida);
         return categoria;

@@ -205,7 +205,7 @@ public class Catalogo {
 
             nombre = Ayudantes.AyudanteScannerString(sc, aviso);
 
-            if (nombre == null || nombre.isEmpty() || !nombre.matches("^[a-zA-Z0-9\\s\\-\\.,!?;:()]+$")) {
+            if (nombre == null || nombre.isEmpty() || !nombre.matches("^[a-zA-Z0-9\\s\\-.,!?;:()]+$")) {
                 opcionNoValida = true;
             }
         } while (opcionNoValida);

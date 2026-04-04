@@ -215,7 +215,7 @@ public class Biblioteca{
 
                 inputISBN = Ayudantes.AyudanteScannerString(sc, aviso);
 
-                if (inputISBN == null || inputISBN.isEmpty() || !inputISBN.matches("^[a-zA-Z0-9\\s\\-\\.,!?;:()]+$")) {
+                if (inputISBN == null || inputISBN.isEmpty() || !inputISBN.matches("^[a-zA-Z0-9\\s\\-.,!?;:()]+$")) {
                     opcionNoValida = true;
                 } else if (inputISBN.equals("0")) {
                     break;
